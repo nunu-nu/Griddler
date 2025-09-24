@@ -1,10 +1,6 @@
 import math
 mm = 2.8346456693
-# HOW TO USE GRIDDLER? basic instructions at the bottom of the code
 
-# —————————————————————————————————
-# ########## SETTINGS #############
-# —————————————————————————————————
 # Composition
 page_size = [420 * mm, 297 * mm]
 number_of_lines = 3
@@ -45,6 +41,11 @@ alt_color_selector = []
 
 # Math sophistry
 rounding_decimals = 2
+
+
+
+
+
 
 
 # ——————————————————————————————

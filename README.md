@@ -1,5 +1,6 @@
 # Griddler - how to
 
+Version 0.4
 Step 0: open the python code in [Drawbot](https://www.drawbot.com/)
 
 ### Modifying the grid
@@ -72,4 +73,4 @@ saveImage("output_subfolder/lettering_grid_italic.jpeg")
 saveImage("output_subfolder/lettering_grid_black.pdf")
 ```
 
-[Somehow written by nu](https://letters.nu/)
+Somehow written by [nu](https://letters.nu/)

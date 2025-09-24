@@ -1,10 +1,10 @@
 # Griddler - how to
 
-Version 0.4
+Version 0.4\
 Step 0: open the python code in [Drawbot](https://www.drawbot.com/)
 
 ### Modifying the grid
-All the settings are at the top of the code. This is the only part of the code you need to modify. The variables are named somewhat clearly after the things they represent.
+All the settings are at the top of the code. This is the only part of the code you need to modify. The variables are named somewhat clearly after the things they represent.\
 If unsure about what a variable does, you can select the number and  Cmd + ↑  or  Cmd + ↓  to easily see what updates in the preview.
 Quick overview:
 ```Python
@@ -72,5 +72,5 @@ saveImage("output_subfolder/parallel_pen_grid.png")
 saveImage("output_subfolder/lettering_grid_italic.jpeg")
 saveImage("output_subfolder/lettering_grid_black.pdf")
 ```
-
+\
 Somehow written by [nu](https://letters.nu/)

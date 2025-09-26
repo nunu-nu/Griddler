@@ -91,12 +91,13 @@ italic_guide_terminal = 5 # draws a 5x5 X-shape at either end of the guide
 ```
 ### Roman pointed pen calligraphy grid
 ![image of a calligraphy grid for the pointed pen](https://github.com/nunu-nu/Griddler/blob/main/demo/demo_2.jpg)
-A grid for a loose roman. Horizontal italic guides are displayed to help maintain vertical strokes, and only x-height and cap height are specified; the rest is up to the writer.\
+A grid for a loose roman. Horizontal italic guides are displayed to help maintain vertical strokes, and only x-height and cap height are specified; the rest is up to the writer. To avoid the no descender height making the bottom line too heavy and low-down, y_offset value is set to 1mm to move the lines up a bit\
 Key parameters:
 ```Python
 number_of_lines = 11
 print_italic_angle = True
 italic_angle = 0
+y_offset = 1 * mm
 ```
 \
 Somehow written by [nu](https://letters.nu/)

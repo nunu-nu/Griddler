@@ -85,8 +85,16 @@ Key parameters:
 ```Python
 number_of_lines = 1
 manual_text_position = 185 * mm # text manually aligned next to guide set
-italic_guide_overshoot = tolerance + 6 * mm
+italic_guide_overshoot = tolerance + 12 * mm
 italic_guide_terminal = 5 # draws a 5x5 X-shape at either end of the guide
 ```
-
+![image of a calligraphy grid for the pointed pen](https://github.com/nunu-nu/Griddler/blob/main/demo/demo_2.jpg)
+A drawing grid for loose roman pointed pen calligraphy. Horizontal italic guides are displayed to help maintain vertical strokes, and only x-height and cap height are specified; the rest is up to the writer.\
+Key parameters:
+```Python
+number_of_lines = 11
+print_italic_angle = True
+italic_angle = 0
+```
+\
 Somehow written by [nu](https://letters.nu/)

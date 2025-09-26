@@ -4,10 +4,10 @@ mm = 2.8346456693
 # Composition
 page_size = [420 * mm, 297 * mm]
 number_of_lines = 3
-margin = 22 * mm
+margin = 20 * mm
 print_settings = True  # True | False
-y_offset = 2 * mm
-horizontal_margin = 5 * mm
+y_offset = 0 * mm
+horizontal_margin = 11 * mm
 line_height_indicator = True
 line_gap = 0 * mm # leave at 0 to centre automatically
 
@@ -20,14 +20,16 @@ descender_height = 20 * mm
 # tolerances / overshoots
 tolerance = 1.4 * mm
 tolerance_style = 1  # 0 = line | 1 = rectangle | 2 = both
+tolerance_inverse_extremes = False # inverse direction cap/asc/desc
 tolerance_color_stroke = [0, 1]
 tolerance_color_fill = [0.9, 0.4, 0.1, 0.5]
 
 print_italic_angle = True
-italic_angle = 11
-italic_guide_interval = 15.0 * mm
+italic_angle = 12
+italic_guide_interval = 10 * mm
 italic_guide_color = [0, 1]
-italic_guide_overshoot = 0 * mm # or e.g. = tolerance
+italic_guide_overshoot = tolerance + 0 * mm
+italic_guide_terminal = 0 # 1 = dot | 2 = X | 3 = both. [3,10] = both, 10 mm radius
 
 # USE SAVED SETTINGS by filling out the parameters
 setting_parameters = []
@@ -81,7 +83,9 @@ if setting_parameters:
 def context_int(n):
     value = round(n / mm, rd)
     return int(value) if value == int(value) else value
-
+if abs(italic_angle) == 90: 
+    italic_angle = 0
+    print_italic_angle = False
 
 print(
     "used setting_parameters:\n"
@@ -108,8 +112,9 @@ print(
 )
 size(*page_size)
 
-mHor = horizontal_margin
-pWidth = width()
+m_hor = horizontal_margin
+p_width = width()
+m_hor_right = p_width - m_hor
 
 descender_height = abs(descender_height)
 x_height = abs(x_height)
@@ -164,7 +169,7 @@ def drawLine(origin, color=0, toleranceDir = -2):
         stroke(*tolerance_color)
     elif color == 2:
         stroke(*italic_guide_color)
-    line((horizontal_margin, origin), (pWidth - horizontal_margin, origin))
+    line((horizontal_margin, origin), (p_width - horizontal_margin, origin))
     stroke(*line_color)
 
 
@@ -175,14 +180,14 @@ def drawTolerance(origin, direction):
     if tolerance_style == 1 or tolerance_style == 2:
         fill(*tolerance_color_fill)
         stroke(None)
-        rect(horizontal_margin, origin,pWidth-2*horizontal_margin, offset)
+        rect(horizontal_margin, origin,p_width-2*horizontal_margin, offset)
         fill(None)
         stroke(*line_color)
         if tolerance_style == 1: return
     stroke(*tolerance_color_stroke)
     line(
         (horizontal_margin, origin + offset),
-        (pWidth - horizontal_margin, origin + offset),
+        (p_width - horizontal_margin, origin + offset),
     )
     stroke(*line_color)
 
@@ -191,19 +196,57 @@ def drawTolerance(origin, direction):
 deg = math.pi / 180
 italX = total_line_height / math.tan((90 - italic_angle) * deg)
 startY = 0
-ital_amount = (width() - max(textOffset, horizontal_margin)) / italic_guide_interval
 
-
-def calcPointOnAngle(y_distance):
+def xDeltaOnAngle(y_distance):
     return y_distance / math.tan((90-italic_angle)*deg)
-def drawItalicGuide(start):
-    if italic_guide_overshoot != 1:
-        startY = baseline - descender_height - italic_guide_overshoot
-        italX = calcPointOnAngle(total_line_height+italic_guide_overshoot)
-    if (start + italX) > (width() - max(textOffset, horizontal_margin)): return
-    if start + italX < max(textOffset, horizontal_margin): return
-    line((start, startY), (start + italX, startY + total_line_height + italic_guide_overshoot*2))
+    # returns x delta given y height and italic angle
 
+def yDeltaOnAngle(x_distance):
+    return x_distance * math.tan((90-italic_angle)*deg)
+
+def drawx(x,y,l = 5):
+    r = l/2
+    line((x-r, y-r), (x+r, y+r))
+    line((x-r, y+r), (x+r, y-r))
+
+def drawItalic(x):
+    if italic_angle == 0 and line_height_indicator and (x == textOffset or x < m_hor or x > m_hor_right):
+        return
+    if italic_angle == 0 and line_height_indicator and (x < textOffset or x > p_width - textOffset):
+        return
+    
+    guide_height = total_line_height + 2 * italic_guide_overshoot
+    x_origin = x - xDeltaOnAngle(descender_height + italic_guide_overshoot)
+    x_end = x_origin + xDeltaOnAngle( guide_height )
+    y_origin = baseline - descender_height - italic_guide_overshoot
+    y_end = baseline - descender_height + guide_height - italic_guide_overshoot
+    if min(x_origin, x_end) > m_hor_right or max(x_origin, x_end) < m_hor:
+        return
+    # truncate guide on margin
+    if x_origin < m_hor or x_origin > m_hor_right:
+        if x_end > x_origin:
+            y_origin = y_end - yDeltaOnAngle(x_end - m_hor)
+            x_origin = m_hor
+        else:
+            y_origin = y_end + yDeltaOnAngle(m_hor_right - x_end)
+            x_origin = m_hor_right 
+    if x_end < m_hor or x_end > m_hor_right:
+        if x_end > x_origin:
+            y_end = y_origin + yDeltaOnAngle(m_hor_right - x_origin)
+            x_end = m_hor_right
+        else:
+            y_end = y_origin - yDeltaOnAngle(x_origin - m_hor)
+            x_end = m_hor
+        
+    line((x_origin, y_origin), (x_end, y_end))
+    if italic_guide_terminal:
+        drawx(x_origin,y_origin,italic_guide_terminal)
+        drawx(x_end,y_end,italic_guide_terminal)
+    
+    
+width_of_ital_square = abs(int(xDeltaOnAngle(total_line_height + italic_guide_overshoot * 2) / italic_guide_interval)) + 1
+screen_width_to_cover = p_width - max(textOffset, horizontal_margin)
+ital_amount = p_width / italic_guide_interval + width_of_ital_square * 2
 
 ############## INITIAL STROKE STYLING
 lineCap("square")
@@ -239,13 +282,14 @@ for i in range(0, number_of_lines):
 
     # ITALIC GUIDES
     startY = baseline - descender_height
-    stroke(*italic_guide_color)
+    stroke(*italic_guide_color) 
     for i in range(0, int(ital_amount)):
+        i = i - width_of_ital_square
         if not print_italic_angle:
             continue
-        if line_height_indicator and i==0: continue
-        drawItalicGuide(
-            max(horizontal_margin, textOffset) + i * italic_guide_interval
-        )
+        # line_height_indicator and i==0: continue
+        drawItalic(i * italic_guide_interval)
     stroke(*line_color)
     startingPoint -= gap_value + total_line_height
+    
+# griddler 0.4.1

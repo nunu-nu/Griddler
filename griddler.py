@@ -9,7 +9,9 @@ print_settings = True  # True | False
 y_offset = 0 * mm
 horizontal_margin = 11 * mm
 line_height_indicator = True
-line_gap = 0 * mm # leave at 0 to centre automatically
+
+manual_line_gap = 0 * mm # leave at 0 for auto centre
+manual_text_position = 0 * mm # leave at 0 for auto position
 
 # METRICS | 0 = off
 x_height = 35 * mm
@@ -20,7 +22,6 @@ descender_height = 20 * mm
 # tolerances / overshoots
 tolerance = 1.4 * mm
 tolerance_style = 1  # 0 = line | 1 = rectangle | 2 = both
-tolerance_inverse_extremes = False # inverse direction cap/asc/desc
 tolerance_color_stroke = [0, 1]
 tolerance_color_fill = [0.9, 0.4, 0.1, 0.5]
 
@@ -29,7 +30,7 @@ italic_angle = 12
 italic_guide_interval = 10 * mm
 italic_guide_color = [0, 1]
 italic_guide_overshoot = tolerance + 0 * mm
-italic_guide_terminal = 0 # 1 = dot | 2 = X | 3 = both. [3,10] = both, 10 mm radius
+italic_guide_terminal = 0
 
 # USE SAVED SETTINGS by filling out the parameters
 setting_parameters = []
@@ -124,8 +125,8 @@ number_of_lines = abs(int(number_of_lines))
 
 total_line_height = max(x_height, cap_height, ascender_height) + descender_height
 
-if line_gap != 0:
-    gap_value = line_gap
+if manual_line_gap != 0:
+    gap_value = manual_line_gap
 elif number_of_lines > 1:
     gap_value = (height() - margin * 2 - ((number_of_lines) * total_line_height)) / (
         number_of_lines - 1
@@ -139,9 +140,8 @@ if number_of_lines == 1:
 # PRINT SETTINGS
 textOffset = max(30, horizontal_margin)
 txt = FormattedString()
-txt.append("lines: ")
-txt.append(str(number_of_lines))
-txt.append("    ")
+if number_of_lines > 4:
+    txt.append("lines: "+str(number_of_lines) + "    ")
 if italic_angle:
     txt.append("italic guides: " + f"{float(round(italic_angle, rd)):g}"+"°    ")
 if x_height:
@@ -158,8 +158,11 @@ if gap_value:
     txt.append("gap: "+f"{float(round(gap_value / mm, rd)):g}"+" mm    ")
 # txt.append("[mm]")
 if print_settings:
+    pos = margin / 2-4+y_offset/2
+    if manual_text_position:
+        pos = manual_text_position
     txt.openTypeFeatures(onum=True)
-    text(txt, (textOffset, margin / 2-4+y_offset/2))
+    text(txt, (textOffset, pos))
 
 
 ############## DRAWING LINES / FUNCTIONS

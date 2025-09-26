@@ -1,6 +1,8 @@
-# Griddler - how to
+# Griddler 
+Version 0.4.1\
+The italic angle is calculated correctly now (oops) and displays more cleanly.
 
-Version 0.4\
+# How to
 Step 0: open the python code in [Drawbot](https://www.drawbot.com/)
 
 ### Modifying the grid
@@ -16,7 +18,9 @@ print_settings = True  # True/False: show text at the bottom with basic metrics 
 y_offset = 2 * mm # move all gridlines vertically. Useful for grids without a descender
 horizontal_margin = 5 * mm # horizontal margin, might be useful depending on printer
 line_height_indicator = True # draw vertical line from bottom to top of the set of gridlines
-line_gap = 0 * mm # 0 to centre. Gap between calligraphy lines
+
+manual_line_gap = 0 * mm # 0 to centre. Gap between calligraphy lines
+manual_text_position = 0 * mm # 0 to place automatically. Distance of metrics info text from the bottom of the page
 
 # METRICS | 0 = off
 x_height = 35 * mm
@@ -34,7 +38,8 @@ print_italic_angle = True
 italic_angle = 11 # 0 = vertical
 italic_guide_interval = 15.0 * mm # how often to draw the italic guide
 italic_guide_color = [0, 1] # optional: individual different color for italic guide
-italic_guide_overshoot = 0 * mm # make line extend over metrics. Can be practical when drawing to align ruler to the italic guide
+italic_guide_overshoot = tolerance + 0 * mm # make line extend over metrics. Can be practical when drawing to align ruler to the italic guide. By default set to tolerance + value to make the italic guide extend to the overshoot line
+italic_guide_terminal = 0 # 0 to hide. defines the size of X-shape at either end of the italic guide. Can be practical for aligning ruler to drawing 
 
 # USE SAVED SETTINGS by filling out the parameters
 setting_parameters = [] # fill in the parameters to reuse old settings
@@ -72,5 +77,16 @@ saveImage("output_subfolder/parallel_pen_grid.png")
 saveImage("output_subfolder/lettering_grid_italic.jpeg")
 saveImage("output_subfolder/lettering_grid_black.pdf")
 ```
-\
+
+# Usage examples
+![image of a drawing grid](https://github.com/nunu-nu/Griddler/blob/main/demo/demo_1.jpg)
+A drawing grid for an italic — the italic diagonal guides are extended beyond the gridline to help with aligning a ruler over the letter drawing. They are given a terminal X shape to make alignment slightly easier. There is only 1 line and it is aligned to the top of the page, with information text manually positioned right below it.\
+Key parameters:
+```Python
+number_of_lines = 1
+manual_text_position = 185 * mm # text manually aligned next to guide set
+italic_guide_overshoot = tolerance + 6 * mm
+italic_guide_terminal = 5 # draws a 5x5 X-shape at either end of the guide
+```
+
 Somehow written by [nu](https://letters.nu/)

@@ -79,8 +79,9 @@ saveImage("output_subfolder/lettering_grid_black.pdf")
 ```
 
 # Usage examples
+### Italic drawing grid
 ![image of a drawing grid](https://github.com/nunu-nu/Griddler/blob/main/demo/demo_1.jpg)
-A drawing grid for an italic — the italic diagonal guides are extended beyond the gridline to help with aligning a ruler over the letter drawing. They are given a terminal X shape to make alignment slightly easier. There is only 1 line and it is aligned to the top of the page, with information text manually positioned right below it.\
+The italic diagonal guides are extended beyond the gridline to help with aligning a ruler over the letter drawing. They are given a terminal X shape to make alignment slightly easier. There is only 1 line and it is aligned to the top of the page, with information text manually positioned right below it.\
 Key parameters:
 ```Python
 number_of_lines = 1
@@ -88,8 +89,9 @@ manual_text_position = 185 * mm # text manually aligned next to guide set
 italic_guide_overshoot = tolerance + 12 * mm
 italic_guide_terminal = 5 # draws a 5x5 X-shape at either end of the guide
 ```
+### Roman pointed pen calligraphy grid
 ![image of a calligraphy grid for the pointed pen](https://github.com/nunu-nu/Griddler/blob/main/demo/demo_2.jpg)
-A drawing grid for loose roman pointed pen calligraphy. Horizontal italic guides are displayed to help maintain vertical strokes, and only x-height and cap height are specified; the rest is up to the writer.\
+A grid for a loose roman. Horizontal italic guides are displayed to help maintain vertical strokes, and only x-height and cap height are specified; the rest is up to the writer.\
 Key parameters:
 ```Python
 number_of_lines = 11
